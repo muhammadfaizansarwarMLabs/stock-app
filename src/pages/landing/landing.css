@@ -1,0 +1,19 @@
+.landing-hero {
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(240, 246, 255, 0.95)),
+    radial-gradient(circle at 15% 20%, rgba(239, 131, 84, 0.2), transparent 40%);
+  position: relative;
+  overflow: hidden;
+}
+
+.landing-hero::after {
+  content: "";
+  position: absolute;
+  right: -4rem;
+  top: -4rem;
+  width: 13rem;
+  height: 13rem;
+  border-radius: 9999px;
+  background: linear-gradient(45deg, rgba(11, 160, 203, 0.35), rgba(239, 131, 84, 0.4));
+  filter: blur(10px);
+}

@@ -1,8 +1,8 @@
-# Specification Quality Checklist: Modern Stock Images Experience
+# Specification Quality Checklist: Bulk Image Download with ZIP
 
-**Purpose**: Validate specification completeness and quality before proceeding to planning  
-**Created**: 2026-03-30  
-**Feature**: [Link to spec.md](../spec.md)
+**Purpose**: Validate specification completeness and quality before proceeding to planning
+**Created**: 2026-03-31
+**Feature**: [spec.md](../spec.md)
 
 ## Content Quality
 
@@ -31,6 +31,6 @@
 
 ## Notes
 
-- Validation iteration 1: All checklist items passed. No follow-up spec edits required.
-- Implementation run 2026-03-30: `npm install` and `npm run build` passed for the static React + Tailwind app.
-- Implementation run 2026-03-30: Remaining manual checks are tracked in `../quickstart.md` under the validation checklist.
+- All 16 checklist items pass. Spec is ready for `/speckit.clarify` or `/speckit.plan`.
+- Assumptions section clearly documents client-side ZIP approach, CORS dependency, and scope boundary (landing page only).
+- FR-011 and SC-007 explicitly address the click-target isolation concern (checkbox vs modal trigger) — a key UX edge case.
