@@ -1,4 +1,6 @@
 import { Link, NavLink } from "react-router-dom";
+import { DownloadButton } from "../bulk-download/DownloadButton";
+import { ErrorBanner } from "./ErrorBanner";
 
 const navItems = [
   { to: "/", label: "Discover" },
@@ -26,8 +28,10 @@ export function AppLayout({ children }) {
               {item.label}
             </NavLink>
           ))}
+          <DownloadButton />
         </nav>
       </header>
+      <ErrorBanner />
       <main>{children}</main>
     </div>
   );

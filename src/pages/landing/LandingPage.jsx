@@ -3,12 +3,15 @@ import { popularImages } from "../../data/images";
 import { filterImagesByTitle } from "../../utils/filter-images";
 import { TitleFilter } from "../../components/filters/TitleFilter";
 import { ImageGrid } from "../../components/image-grid/ImageGrid";
+import { useSelection } from "../../state/selection-context";
 import "./landing.css";
 
 export function LandingPage({ favoriteIds, onToggleFavorite }) {
   const [query, setQuery] = useState("");
+  const { selectedIds, selectAll, clearAll } = useSelection();
 
   const filteredImages = useMemo(() => filterImagesByTitle(popularImages, query), [query]);
+  const visibleIds = useMemo(() => filteredImages.map((image) => image.id), [filteredImages]);
 
   return (
     <section className="space-y-6">
@@ -21,6 +24,25 @@ export function LandingPage({ favoriteIds, onToggleFavorite }) {
         <div className="mt-6 max-w-md">
           <TitleFilter query={query} onQueryChange={setQuery} />
         </div>
+      </div>
+
+      <div className="flex flex-wrap items-center gap-3">
+        <button
+          type="button"
+          className="rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-slate-400 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+          onClick={() => selectAll(visibleIds)}
+          disabled={!visibleIds.length}
+        >
+          Select All ({visibleIds.length})
+        </button>
+        <button
+          type="button"
+          className="rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-slate-400 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+          onClick={clearAll}
+          disabled={selectedIds.size === 0}
+        >
+          Clear All
+        </button>
       </div>
 
       <ImageGrid

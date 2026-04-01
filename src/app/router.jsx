@@ -8,6 +8,7 @@ import { FaqPage } from "../pages/faq/FaqPage";
 import { ImageModal } from "../components/image-modal/ImageModal";
 import { getImageById } from "../data/images";
 import { loadFavorites, saveFavorites, toggleFavorite } from "../state/favorites-store";
+import { SelectionProvider } from "../state/selection-context";
 
 function ImageModalRoute() {
   const location = useLocation();
@@ -33,24 +34,26 @@ export function AppRouter() {
   };
 
   return (
-    <AppLayout>
-      <Routes location={backgroundLocation || location}>
-        <Route path="/" element={<LandingPage favoriteIds={favoriteIds} onToggleFavorite={onToggleFavorite} />} />
-        <Route
-          path="/favorites"
-          element={<FavoritesPage favoriteIds={favoriteIds} onToggleFavorite={onToggleFavorite} />}
-        />
-        <Route path="/about" element={<AboutPage />} />
-        <Route path="/faq" element={<FaqPage />} />
-        <Route path="/image/:imageId" element={<ImageModalRoute />} />
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
-
-      {backgroundLocation ? (
-        <Routes>
+    <SelectionProvider>
+      <AppLayout>
+        <Routes location={backgroundLocation || location}>
+          <Route path="/" element={<LandingPage favoriteIds={favoriteIds} onToggleFavorite={onToggleFavorite} />} />
+          <Route
+            path="/favorites"
+            element={<FavoritesPage favoriteIds={favoriteIds} onToggleFavorite={onToggleFavorite} />}
+          />
+          <Route path="/about" element={<AboutPage />} />
+          <Route path="/faq" element={<FaqPage />} />
           <Route path="/image/:imageId" element={<ImageModalRoute />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
-      ) : null}
-    </AppLayout>
+
+        {backgroundLocation ? (
+          <Routes>
+            <Route path="/image/:imageId" element={<ImageModalRoute />} />
+          </Routes>
+        ) : null}
+      </AppLayout>
+    </SelectionProvider>
   );
 }
