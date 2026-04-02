@@ -8,7 +8,7 @@ export function FavoriteToggle({ isFavorite, onToggle }) {
         event.stopPropagation();
         onToggle();
       }}
-      className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-transparent text-red-500 transition hover:text-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-offset-2 focus:ring-offset-white"
+      className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-slate-500/80 text-white transition hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-slate-300 focus:ring-offset-2 focus:ring-offset-white"
     >
       {isFavorite ? (
         <svg viewBox="0 0 20 20" fill="currentColor" className="size-5" aria-hidden="true">

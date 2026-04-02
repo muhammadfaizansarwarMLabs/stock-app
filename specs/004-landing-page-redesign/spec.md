@@ -9,7 +9,7 @@
 
 ### Session 2026-04-02
 
-- Q: When should the heart and download icons be visible on each card? → A: Always visible on every card at all times (not hover-only)
+- Q: When should the heart and download icons be visible on each card? → A: Visible only when hovering over the image card
 - Q: What feedback should the user receive when a card-level download fails? → A: Small inline error message on the card, auto-dismisses after ~3 seconds
 - Q: Where on the card should the heart and download icons be positioned? → A: Bottom-right corner of the card image, without a dark overlay bar
 - Q: How should the landing page hero banner be structured? → A: Text occupies the left 50% and animated trending images occupy the right 50%
@@ -19,6 +19,11 @@
 - Q: How should the hero animation behave for reduced-motion users? → A: Keep the same animation for all users
 - Q: What layout structure should the animated hero images use? → A: A freeform collage of overlapping cards all moving upward together
 - Q: What display font should be used for the hero banner headline? → A: Playfair Display (Google Fonts, loaded as a new import)
+
+### Session 2026-04-02 (Round 4)
+
+- Q: How should heart and download card icons be revealed and styled? → A: Show both icons only on image hover; both icons are white with gray circular backgrounds
+- Q: How should hover-only icon behavior work on touch devices? → A: Hover-only on pointer devices; always visible on touch-only devices
 
 ### Session 2026-04-02 (Round 2)
 
@@ -44,25 +49,26 @@
 
 ### User Story 1 — Heart Icon Favorite Toggle (Priority: P1)
 
-A user browsing the landing page wants to save an image to favorites. Instead of a text button they see a heart icon pinned to the bottom-right area of the image card. An empty outline heart means "not favorited"; clicking it fills the heart solid red and saves the image. Clicking a filled red heart removes it from favorites and restores the outline.
+A user browsing the landing page wants to save an image to favorites. Instead of a text button they see a heart icon in the bottom-right area of the image card on hover for pointer devices, and always visible on touch-only devices. An outline heart means "not favorited"; clicking it fills the heart and saves the image. Clicking a filled heart removes it from favorites and restores the outline. The heart icon is white and displayed inside a gray circular background.
 
 **Why this priority**: The favorite toggle is an existing core feature whose visual control is being replaced. It directly affects recognition and usability for all users.
 
-**Independent Test**: Load the landing page, locate the heart icon on any card, click it once and verify it becomes a filled red heart, click again and verify it reverts to an outline heart. No other page behavior should change.
+**Independent Test**: Load the landing page, hover any image card, click the heart icon once and verify it becomes filled, click again and verify it reverts to an outline heart. The icon remains white with a gray circular background in both states. No other page behavior should change.
 
 **Acceptance Scenarios**:
 
-1. **Given** an image is not favorited, **When** the user views its card, **Then** an outline red heart icon is visible near the bottom-right corner of the card image.
-2. **Given** an image is not favorited, **When** the user clicks the heart icon, **Then** the heart becomes filled red and the image is added to favorites.
-3. **Given** an image is already favorited, **When** the user views its card, **Then** a filled red heart icon is visible.
-4. **Given** an image is already favorited, **When** the user clicks the filled heart, **Then** the heart reverts to outline and the image is removed from favorites.
-5. **Given** the page reloads, **When** an image was previously favorited, **Then** the heart icon still appears filled red (persisted state).
+1. **Given** an image is not favorited on a pointer device, **When** the user hovers over its card image, **Then** an outline heart icon is visible near the bottom-right corner of the card image as a white icon inside a gray circular background.
+2. **Given** an image is not favorited, **When** the user clicks the heart icon, **Then** the heart becomes filled and the image is added to favorites.
+3. **Given** an image is already favorited on a pointer device, **When** the user hovers over its card image, **Then** a filled heart icon is visible as a white icon inside a gray circular background.
+4. **Given** the user is on a touch-only device, **When** the card renders, **Then** the heart icon is visible without requiring hover and remains white inside a gray circular background.
+5. **Given** an image is already favorited, **When** the user clicks the filled heart, **Then** the heart reverts to outline and the image is removed from favorites.
+6. **Given** the page reloads, **When** an image was previously favorited, **Then** the heart icon still appears filled (persisted state).
 
 ---
 
 ### User Story 2 — Direct Download Icon on Card (Priority: P2)
 
-A user wants to download an image directly from the landing page grid without first opening the image modal. Each card has a red download icon visible alongside the heart icon in the bottom-right control cluster. Clicking it triggers the same direct download as the existing modal download at default settings (no effects applied).
+A user wants to download an image directly from the landing page grid without first opening the image modal. Each card shows a download icon alongside the heart icon in the bottom-right control cluster on hover for pointer devices, and always visible on touch-only devices. The download icon is white and displayed inside a gray circular background. Clicking it triggers the same direct download as the existing modal download at default settings (no effects applied).
 
 **Why this priority**: Reduces friction for users who only want to download — they no longer need to open the modal first.
 
@@ -70,10 +76,11 @@ A user wants to download an image directly from the landing page grid without fi
 
 **Acceptance Scenarios**:
 
-1. **Given** the landing page is loaded, **When** the user views any image card, **Then** a red download icon is visible alongside the heart icon near the bottom-right of the card image.
-2. **Given** the user clicks the download icon, **When** the download completes, **Then** the original image file is saved (no effects applied, original filename and extension).
-3. **Given** the download is in progress, **When** the user looks at the icon, **Then** a visual busy indicator replaces the icon, preventing a second simultaneous download on the same card.
-4. **Given** the download fails, **When** the error occurs, **Then** the icon returns to its normal state with no broken UI left behind.
+1. **Given** the landing page is loaded on a pointer device, **When** the user hovers over any image card, **Then** a download icon is visible alongside the heart icon near the bottom-right of the card image, with both icons styled as white icons inside gray circular backgrounds.
+2. **Given** the landing page is loaded on a touch-only device, **When** any image card renders, **Then** download and heart icons are visible without requiring hover, styled as white icons inside gray circular backgrounds.
+3. **Given** the user clicks the download icon, **When** the download completes, **Then** the original image file is saved (no effects applied, original filename and extension).
+4. **Given** the download is in progress, **When** the user looks at the icon, **Then** a visual busy indicator replaces the icon, preventing a second simultaneous download on the same card.
+5. **Given** the download fails, **When** the error occurs, **Then** the icon returns to its normal state with no broken UI left behind.
 
 ---
 
@@ -170,6 +177,7 @@ A user browsing the landing page wants to quickly narrow images by category with
 
 - What happens when the heart icon is clicked rapidly multiple times — toggle should be idempotent and not produce duplicate favorites entries.
 - What happens when a direct card download fails due to a network error — a short inline error label appears on the card and auto-dismisses after ~3 seconds; the download icon then resets to its normal state.
+- What happens on touch-only devices with no hover state — heart and download icons remain visible by default so controls are discoverable and usable.
 - What happens on very small viewports (< 375 px) — grid should not overflow horizontally.
 - What happens when the image list is empty — grid renders with no broken layout.
 - What happens if there are not enough suitable trending images for the hero animation — the banner should still render with the best available curated subset and without empty broken slots.
@@ -185,14 +193,14 @@ A user browsing the landing page wants to quickly narrow images by category with
 
 ### Functional Requirements
 
-- **FR-001**: The "Add to Favorite" text button on each image card MUST be replaced with an outline red heart SVG icon that is always visible on the card (not hover-dependent).
-- **FR-002**: The "Favorited" (active) text button on each image card MUST be replaced with a filled solid red heart SVG icon that is always visible on the card (not hover-dependent).
+- **FR-001**: The "Add to Favorite" text button on each image card MUST be replaced with an outline heart SVG icon that is shown on image hover for pointer devices and always visible on touch-only devices.
+- **FR-002**: The "Favorited" (active) text button on each image card MUST be replaced with a filled heart SVG icon that is shown on image hover for pointer devices and always visible on touch-only devices.
 - **FR-003**: The heart icon MUST retain the exact same toggle behavior (add/remove and persist to existing favorites store) as the current text button.
-- **FR-004**: Each image card MUST display a download icon button rendered in parallel (side by side, same vertical level) with the heart icon; the download icon MUST be always visible (not hover-dependent).
+- **FR-004**: Each image card MUST display a download icon button rendered in parallel (side by side, same vertical level) with the heart icon; the download icon MUST be shown on image hover for pointer devices and always visible on touch-only devices.
 - **FR-005**: Clicking the download icon MUST trigger a direct download of the original image file at default settings (no effects applied) using the existing download utility.
 - **FR-006**: While a card-level download is in progress, the download icon MUST show a busy/loading state and MUST NOT allow a second simultaneous download on the same card.
 - **FR-011**: When a card-level download fails, a short inline error message MUST appear on that card and MUST auto-dismiss after approximately 3 seconds, after which the download icon returns to its normal interactive state.
-- **FR-007**: The heart icon and download icon MUST be positioned side by side near the bottom-right corner of each card image, always visible, without using a semi-transparent dark overlay bar behind them.
+- **FR-007**: The heart icon and download icon MUST be positioned side by side near the bottom-right corner of each card image, appear on image hover for pointer devices and always visible on touch-only devices, and be styled as white icons inside gray circular backgrounds, without using a semi-transparent dark overlay bar behind them.
 - **FR-008**: The landing page image grid MUST update card and image sizing so that available horizontal space is fully utilized with no visible empty right-side gutter at any common viewport width.
 - **FR-009**: Image aspect ratios MUST be preserved — images crop to fill their container, not stretch.
 - **FR-010**: All icon-only controls (heart, download) MUST have accessible `aria-label` attributes for screen-reader users.
@@ -237,7 +245,7 @@ A user browsing the landing page wants to quickly narrow images by category with
 - **SC-001**: Users can toggle favorites on the landing page using a single heart icon click — no text button is visible.
 - **SC-002**: Users can download any image from the landing page in one click without opening the modal.
 - **SC-003**: At all common viewport widths (375 px – 1920 px) the image grid fills horizontal space with no visible empty right-side gutter.
-- **SC-004**: Heart and download icons are horizontally aligned near the bottom-right of every card image, visible at all viewport widths, with no dark overlay bar behind them.
+- **SC-004**: Heart and download icons are horizontally aligned near the bottom-right of every card image, appear on hover for pointer devices and stay visible on touch-only devices, and are styled as white icons with gray circular backgrounds at all viewport widths, with no dark overlay bar behind them.
 - **SC-005**: A failed card download shows an inline error message on the card that auto-dismisses in ~3 seconds, after which the card returns to its normal interactive state with no broken UI.
 - **SC-006**: The hero banner clearly presents text on the left half and animated imagery on the right half on desktop layouts.
 - **SC-007**: The hero banner shows a freeform collage of overlapping curated image cards animating upward, contained within the right half of the banner without obscuring the hero text.
@@ -272,4 +280,5 @@ A user browsing the landing page wants to quickly narrow images by category with
 - Footer layout is a three-column grid on desktop (branding/tagline left, navigation center, legal right) that collapses to a single stacked centered column on viewports ≤ 768 px.
 - Tag chips are derived from the union of all tags across the existing image dataset; the exact 10–12 chips selected are the most frequently occurring tags.
 - Tag filter state is encoded in the URL as a `?tag=<tagname>` query parameter so filtered views are shareable, bookmarkable, and work with browser back/forward navigation.
+- Card controls use pointer-aware visibility: hover reveal on pointer devices and always-visible controls on touch-only devices.
 

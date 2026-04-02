@@ -28,16 +28,19 @@ Open [http://localhost:5173](http://localhost:5173) in your browser.
 
 ### US1 — Heart Icon Favorite Toggle
 
-- [ ] Open the landing page. Every image card shows a heart icon in the bottom overlay bar.
-- [ ] Hearts render as red outlines for unfavorited images and solid red for already-persisted favorites.
-- [ ] Click any heart icon → it changes to a filled red heart. No page navigation occurs.
+- [ ] On pointer devices, hover an image card and verify the heart icon appears in the bottom-right action cluster.
+- [ ] On touch-only devices, verify the heart icon is visible without hover.
+- [ ] Heart control is a white icon inside a gray circular background in both states.
+- [ ] Click any heart icon → it changes from outline to filled state. No page navigation occurs.
 - [ ] Click the filled heart → it reverts to outline. Image is removed from favorites.
 - [ ] Navigate to the Favorites page → only images with filled hearts appear.
 - [ ] Reload the page → previously favorited images still show filled hearts (persisted).
 
 ### US2 — Direct Download Icon
 
-- [ ] Every card shows a download icon (ArrowDownTray) in the bottom overlay bar, left side.
+- [ ] On pointer devices, hover an image card and verify the download icon appears alongside the heart icon in the bottom-right action cluster.
+- [ ] On touch-only devices, verify the download icon is visible without hover.
+- [ ] Download control is a white icon inside a gray circular background.
 - [ ] Click the download icon → browser starts a file download of the original image without opening the modal.
 - [ ] While downloading, the icon shows a spinning animation and is non-clickable.
 - [ ] After download completes, the icon returns to normal.
@@ -114,114 +117,19 @@ Expected output: `✓ built in X.XXs` with no errors or warnings.
 
 ## Verification Notes
 
-**Build Results (Latest - 2026-04-02)**:
-- Build command: `npm run build` → ✓ 67 modules transformed, 336.09 kB JS, 27.50 kB CSS, built in 2.93s
-- No errors reported.
-- All dependencies resolved correctly.
-
-**Implementation Status**:
-- ✅ US1 (Heart favorite toggle): Implemented, tested, and persisted
-- ✅ US2 (Direct download): Implemented with error handling and auto-dismiss
-- ✅ US3 (Full-width grid): Responsive breakpoints implemented
-- ✅ US4 (Animated hero): Two-column layout with Playfair Display and CSS animation
-- ✅ US5 (Dark mode): Theme toggle with localStorage persistence and OS preference fallback
-- ✅ US6 (Site footer): Three-column desktop layout with mobile stacking
-- ✅ US7 (Tag filter): Horizontal scrollable chips with URL state and filter composition
+**Build Results (2026-04-02)**:
+- Build command: `npm run build` → ✓ 67 modules transformed, `dist/assets/index-Zsgh43q5.css` 27.65 kB, `dist/assets/index-BszYryV1.js` 335.87 kB, built in 5.48s.
+- No compile errors reported.
 
 **Code Verification (2026-04-02)**:
-- ✅ index.html: Theme initialization script added in `<head>` (reads localStorage + prefers-color-scheme, applies `dark` class)
-- ✅ src/styles/tailwind.css: `html.dark {}` block defined with dark mode color overrides
-- ✅ src/components/theme/ThemeToggle.jsx: Created with sun/moon SVG icons and localStorage integration
-- ✅ src/components/layout/AppLayout.jsx: ThemeToggle and SiteFooter imported and added to layout
-- ✅ src/components/layout/SiteFooter.jsx: Created with 3-column desktop / mobile stacking layout
-- ✅ src/data/images.js: `getTopTags()` and `getImagesByTag()` helper functions added
-- ✅ src/components/landing/TagFilterRow.jsx: Created with horizontal scrollable tag chips
-- ✅ src/pages/landing/LandingPage.jsx: TagFilterRow integrated with URL state (`?tag=<tagname>`) and filter composition
+- ✅ `index.html`: theme initialization script present (`localStorage` + `prefers-color-scheme` before hydration).
+- ✅ `src/styles/tailwind.css`: `html.dark` CSS variable override block present.
+- ✅ `src/components/theme/ThemeToggle.jsx`: toggle component exists and persists theme preference.
+- ✅ `src/components/layout/AppLayout.jsx`: `ThemeToggle` and `SiteFooter` are wired.
+- ✅ `src/components/layout/SiteFooter.jsx`: footer component present.
+- ✅ `src/data/images.js`: `getTopTags()` and `getImagesByTag()` helpers present.
+- ✅ `src/components/landing/TagFilterRow.jsx`: tag filter row component present.
+- ✅ `src/pages/landing/LandingPage.jsx`: tag URL state + tag/text composed filtering wired.
 
-**Manual Validation Results (Live Browser Testing)**:
-Browser testing performed on http://localhost:5173 with dev server running.
-
-### Desktop (1280 px) - ✅ PASS
-- ✅ Navbar displays properly with all nav items and theme toggle visible
-- ✅ Hero section shows 50/50 text/collage layout
-- ✅ Collage scrolls upward continuously with smooth animation
-- ✅ Hero headline renders in Playfair Display (serif font, elegant appearance)
-- ✅ Image grid displays 4 columns, fills full width with no right-side gutter
-- ✅ Tag filter row visible below Select All/Clear All buttons
-- ✅ Tag chips display with horizontal scroll for overflow
-- ✅ Clicking tag highlights it and filters grid results
-- ✅ URL updates to `?tag=<tagname>` when tag is active
-- ✅ Reloading page preserves active tag filter
-- ✅ Footer displays 3-column layout (branding, nav, legal)
-- ✅ Footer colors match light mode theme
-
-### Desktop (1920 px) - ✅ PASS
-- ✅ Same as 1280 px, with wider layout accommodating larger screen
-- ✅ Page content fills available width with `max-w-[1800px]` constraint
-- ✅ All components scale appropriately without breaking
-
-### Tablet (768 px) - ✅ PASS
-- ✅ Navbar switches to flex layout with items centered
-- ✅ Hero section transitions to stacked layout (text on top, collage below)
-- ✅ Hero height maintained at 36rem
-- ✅ Image grid displays 3 columns, fills full width
-- ✅ Tag filter row still scrollable horizontally
-- ✅ Footer stacks to single centered column
-- ✅ All text remains readable and properly sized
-
-### Mobile (375 px) - ✅ PASS
-- ✅ Navbar items stack or wrap appropriately
-- ✅ Theme toggle visible on navbar
-- ✅ Hero section readable with Playfair Display headline
-- ✅ Hero collage visible but scaled for mobile
-- ✅ Image grid displays 2 columns, fills full width with no overflow
-- ✅ Cards scale appropriately for small screen
-- ✅ Tag filter row scrolls horizontally without wrapping chips
-- ✅ Footer displays single centered column with readable text
-
-### Theme Toggle Testing - ✅ PASS
-- ✅ Clicking sun/moon icon toggles theme across entire site
-- ✅ Dark mode applied: backgrounds darken, text lightens
-- ✅ All pages (landing, favorites, about, faq) switch themes immediately
-- ✅ Theme preference persists after page reload (localStorage working)
-- ✅ Clearing localStorage and reloading applies OS `prefers-color-scheme` preference
-- ✅ Dark mode colors consistent across all components
-
-### Tag Filter Testing - ✅ PASS
-- ✅ Top 12 tags extracted from image dataset and displayed
-- ✅ Tag chips show in horizontal scrollable row
-- ✅ Clicking tag highlights it (orange background, white text)
-- ✅ Grid filters to show only images with selected tag
-- ✅ URL updates to reflect active tag
-- ✅ Clicking active tag deactivates it
-- ✅ Text search + tag filter compose correctly (results match both filters)
-- ✅ Reloading page with `?tag=<tagname>` preserves filter
-
-### Footer Testing - ✅ PASS
-- ✅ Footer visible on all pages (landing, favorites, about, faq)
-- ✅ Desktop: 3-column layout with branding, navigation, and legal links
-- ✅ Mobile: Single centered column layout
-- ✅ FAQ and About links navigate to correct pages
-- ✅ Placeholder links (Blog, Contact, Privacy, Terms) render as anchors without errors
-- ✅ Footer respects active light/dark theme
-
-### Regression Checks - ✅ PASS
-- ✅ Heart favorite toggle still works and persists
-- ✅ Download icon functions with error handling
-- ✅ Select All / Clear All bulk controls work correctly
-- ✅ Title filter still filters the grid
-- ✅ Tag filter + text search compose correctly
-- ✅ Favorites page displays only favorited images
-- ✅ Image modal opens when clicking card content
-- ✅ No console errors in browser DevTools
-
-## Summary
-
-**All 7 user stories fully implemented, tested, and validated across 4 breakpoints (375, 768, 1280, 1920 px).**
-
-- Build: ✅ PASS (67 modules, no errors)
-- Code: ✅ PASS (all components created, all integrations working)
-- Manual Testing: ✅ PASS (all features working on desktop, tablet, mobile with both light and dark themes)
-- Regression: ✅ PASS (all existing features still functioning correctly)
-
-**Ready for production deployment.**
+**Manual Validation Status**:
+- ⏳ Full interactive regression across 375/768/1280/1920 breakpoints is still required to complete T037.

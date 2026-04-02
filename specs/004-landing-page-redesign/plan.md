@@ -7,7 +7,7 @@
 
 Seven user stories across four parallel areas of change:
 
-1. **Card controls (US1, US2)** — Replace the text favorite button with inline red heart SVG icons (outline / filled). Add a matching red download icon. Both sit at the bottom-right of the card image with no background overlay.
+1. **Card controls (US1, US2)** — Replace the text favorite button with inline heart SVG icons (outline / filled). Add a matching download icon. Both use white icon glyphs inside gray circular backgrounds, appear on hover for pointer devices, and stay visible on touch-only devices; controls remain at the bottom-right of the card image with no background overlay.
 2. **Grid and page width (US3)** — Widen the page shell, navbar, and grid so the landing page fills the viewport on large screens. Cards grow taller and the column breakpoints are revised.
 3. **Animated hero banner (US4)** — Refactor the hero section into a two-column desktop layout: text on the left half, a freeform upward-scrolling image collage on the right half. On smaller screens the two sections stack vertically.
 4. **Hero typography (US4)** — Add Playfair Display via Google Fonts for the hero headline, keeping Manrope and Space Grotesk for all other text.
@@ -24,7 +24,7 @@ Seven user stories across four parallel areas of change:
 **Target Platform**: Static SPA for desktop and mobile browsers  
 **Project Type**: Web application (single React SPA)  
 **Performance Goals**: No measurable regressions; hero animation is CSS-only (`@keyframes` + `translate`); theme applied via head script to avoid FOUC; smooth transitions  
-**Constraints**: No new npm packages; Playfair Display + existing Google Fonts via `@import`; inline SVG icons only; CSS custom property swap for dark mode (no Tailwind `dark:` utilities)  
+**Constraints**: No new npm packages; Playfair Display + existing Google Fonts via `@import`; inline SVG icons only; pointer-aware control visibility (hover on pointer devices, always visible on touch-only devices); CSS custom property swap for dark mode (no Tailwind `dark:` utilities)  
 **Scale/Scope**: ~12 files modified, 2 new CSS rules (keyframe + dark mode), 2 new fonts/colors in config, 1 head script inline, 3 new components (ThemeToggle, SiteFooter, TagFilterRow)
 
 ## Constitution Check
@@ -68,9 +68,9 @@ src/
 │       └── landing.css                 ← @keyframes scroll-up animation
 ├── components/
 │   ├── favorites/
-│   │   └── FavoriteToggle.jsx          ← red heart SVG icons
+│   │   └── FavoriteToggle.jsx          ← heart SVG icons (white-on-gray circular control)
 │   ├── image-grid/
-│   │   ├── ImageCard.jsx               ← red download icon, no overlay, error state
+│   │   ├── ImageCard.jsx               ← pointer-aware icon visibility, white-on-gray controls, no overlay, error state
 │   │   └── ImageGrid.jsx               ← responsive column breakpoints
 │   ├── layout/
 │   │   ├── AppLayout.jsx               ← navbar: sticky, theme toggle at far right
@@ -100,13 +100,14 @@ Research decisions are documented in `research.md` and resolve all clarification
 
 ### Card Controls (US1 & US2)
 
-1. Heart icon visuals use inline Heroicons-style SVGs with `text-red-500` in both states.
-2. Download icon uses ArrowDownTray Heroicons solid SVG, also `text-red-500`.
-3. Icons are positioned `absolute bottom-3 right-3 z-20 flex gap-2 items-center` — no background overlay bar.
+1. Heart icon visuals use inline Heroicons-style SVGs with white icon glyphs in both states, rendered inside gray circular control backgrounds.
+2. Download icon uses ArrowDownTray Heroicons solid SVG with white icon glyph, also rendered inside a gray circular control background.
+3. Icons are positioned `absolute bottom-3 right-3 z-20 flex gap-2 items-center` — no background overlay bar; visibility is hover-revealed on pointer devices.
 4. `FavoriteToggle` keeps the same prop contract (`isFavorite`, `onToggle`).
 5. Download state (`downloadBusy`, `downloadError`) is local `useState` inside `ImageCard`.
 6. Both icon buttons call `stopPropagation` + `preventDefault` to block the card `<Link>`.
 7. Download errors auto-dismiss after 3 s via `useEffect` + `setTimeout` with cleanup.
+8. On touch-only devices (no hover capability), both controls remain visible by default for discoverability and accessibility.
 
 ### Grid & Page Width (US3)
 
@@ -184,8 +185,8 @@ Re-check result after Phase 1 artifacts: PASS.
 Planned implementation sequencing divided into priority groups:
 
 **Group A — Card controls (US1 & US2, P1 / P2)** [COMPLETED]
-1. Replace `FavoriteToggle.jsx` text button with red heart SVG icons; update `aria-label`.
-2. Update `ImageCard.jsx`: remove overlay bar; move icon cluster to `absolute bottom-3 right-3`; add download icon, `downloadBusy`/`downloadError` state, and auto-dismiss logic.
+1. Replace `FavoriteToggle.jsx` text button with heart SVG icons styled as white glyphs in gray circular backgrounds; update `aria-label`.
+2. Update `ImageCard.jsx`: remove overlay bar; move icon cluster to `absolute bottom-3 right-3`; add download icon, `downloadBusy`/`downloadError` state, auto-dismiss logic, and pointer-aware visibility rules (hover on pointer devices, always visible on touch-only devices).
 
 **Group B — Grid & page width (US3, P3)** [COMPLETED]
 3. Update `ImageGrid.jsx` responsive column breakpoints.

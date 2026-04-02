@@ -18,12 +18,12 @@
 
 ## Phase 2: Foundational (Blocking Prerequisites)
 
-**Purpose**: Introduce shared card overlay scaffolding required by all story implementations.
+**Purpose**: Introduce shared card action-control scaffolding required by all story implementations.
 
 **CRITICAL**: Complete this phase before starting user story tasks.
 
-- [X] T003 Add persistent bottom action overlay container and z-index layering in `src/components/image-grid/ImageCard.jsx`
-- [X] T004 Add shared click-guard handling for overlay icon controls in `src/components/image-grid/ImageCard.jsx`
+- [X] T003 Add persistent bottom-right action control cluster and z-index layering in `src/components/image-grid/ImageCard.jsx` (no overlay bar)
+- [X] T004 Add shared click-guard handling for icon controls in `src/components/image-grid/ImageCard.jsx`
 
 **Checkpoint**: Card action overlay foundation is ready for story-specific controls.
 
@@ -31,15 +31,15 @@
 
 ## Phase 3: User Story 1 - Heart Icon Favorite Toggle (Priority: P1) 🎯 MVP
 
-**Goal**: Replace text favorite control with red heart icons while preserving existing favorite behavior and persistence.
+**Goal**: Replace text favorite control with heart icon controls styled as white glyphs in gray circular backgrounds, using pointer-aware visibility (hover on pointer devices, always visible on touch-only devices), while preserving existing favorite behavior and persistence.
 
-**Independent Test**: On landing page, click heart on any card to toggle outline/filled red states and verify favorite persistence after reload.
+**Independent Test**: On landing page, verify heart controls appear on hover for pointer devices and remain visible on touch-only devices; click heart on any card to toggle outline/filled states and verify favorite persistence after reload.
 
 ### Implementation for User Story 1
 
-- [X] T005 [P] [US1] Replace text favorite button content with outline/solid red heart SVG states in `src/components/favorites/FavoriteToggle.jsx`
-- [X] T006 [US1] Add icon-only favorite control styling and dynamic `aria-label` values in `src/components/favorites/FavoriteToggle.jsx`
-- [X] T007 [US1] Move `FavoriteToggle` into the bottom image overlay action row in `src/components/image-grid/ImageCard.jsx`
+- [X] T005 [P] [US1] Replace text favorite button content with outline/solid heart SVG states styled as white glyphs in gray circular backgrounds in `src/components/favorites/FavoriteToggle.jsx`
+- [X] T006 [US1] Add icon-only favorite control styling with pointer-aware visibility and dynamic `aria-label` values in `src/components/favorites/FavoriteToggle.jsx`
+- [X] T007 [US1] Position `FavoriteToggle` in the bottom-right action cluster in `src/components/image-grid/ImageCard.jsx` (no overlay bar)
 
 **Checkpoint**: User Story 1 is independently functional and testable.
 
@@ -47,7 +47,7 @@
 
 ## Phase 4: User Story 2 - Direct Download Icon on Card (Priority: P2)
 
-**Goal**: Enable one-click, on-card direct download with busy state and inline auto-dismissing error feedback.
+**Goal**: Enable one-click, on-card direct download with white-on-gray circular download control, pointer-aware visibility, busy state, and inline auto-dismissing error feedback.
 
 **Independent Test**: Click a card download icon without opening modal; verify download starts, busy state blocks re-click, and failure shows inline error that clears in ~3 seconds.
 
@@ -55,7 +55,7 @@
 
 - [X] T008 [P] [US2] Add per-card `downloadBusy` and `downloadError` state with timeout cleanup in `src/components/image-grid/ImageCard.jsx`
 - [X] T009 [US2] Implement direct download handler using `downloadImage(image, null)` in `src/components/image-grid/ImageCard.jsx`
-- [X] T010 [P] [US2] Add overlay download icon button with disabled busy spinner and `aria-label` in `src/components/image-grid/ImageCard.jsx`
+- [X] T010 [P] [US2] Add download icon button (white glyph in gray circular background) with pointer-aware visibility, disabled busy spinner, and `aria-label` in `src/components/image-grid/ImageCard.jsx`
 - [X] T011 [US2] Render inline auto-dismiss card download error feedback in `src/components/image-grid/ImageCard.jsx`
 
 **Checkpoint**: User Stories 1 and 2 both work independently.
@@ -70,7 +70,7 @@
 
 ### Implementation for User Story 3
 
-- [X] T012 [US3] Update grid breakpoint classes to `grid-cols-2 sm:grid-cols-3 lg:grid-cols-4` in `src/components/image-grid/ImageGrid.jsx`
+- [X] T012 [US3] Update grid breakpoint classes to `grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5` in `src/components/image-grid/ImageGrid.jsx`
 - [X] T013 [US3] Keep image fill/crop behavior consistent with `object-cover` card sizing in `src/components/image-grid/ImageCard.jsx`
 
 **Checkpoint**: All user stories are independently functional.
@@ -174,7 +174,7 @@
 
 - [X] T035 [P] Update manual validation checklist to match final implemented behavior for all seven user stories in `specs/004-landing-page-redesign/quickstart.md`
 - [X] T036 Run `npm run build` and verify no errors (all seven user stories compiled)
-- [X] T037 Run full regression quickstart validation across desktop (1280 px, 1920 px) and mobile (375 px, 768 px) breakpoints for all seven user stories and record results in `specs/004-landing-page-redesign/quickstart.md`
+- [ ] T037 Run full regression quickstart validation across desktop (1280 px, 1920 px) and mobile (375 px, 768 px) breakpoints for all seven user stories and record results in `specs/004-landing-page-redesign/quickstart.md`
 
 ---
 
@@ -210,11 +210,9 @@
 2. US2 ✅
 3. US3 ✅
 4. US4 (hero banner) ✅
-
-**Pending:**
-5. US5 (theme toggle) - P2
-6. US7 (tag filter row) - P2 (can be parallel with US5)
-7. US6 (site footer) - P3
+5. US5 (theme toggle) ✅
+6. US7 (tag filter row) ✅
+7. US6 (site footer) ✅
 
 ---
 
@@ -257,32 +255,15 @@ Task: T032–T034 [US7] in LandingPage.jsx (can run parallel with T031 if tag li
 
 ## Implementation Strategy
 
-### Completed (US1–US4)
+### Completed (US1–US7)
 
 1. ✅ Phase 1 and Phase 2 complete.
-2. ✅ US1–US4 all implemented and validated independently via quickstart checklist.
-3. ✅ Build passing (64 modules, 330.58 kB JS, 24.67 kB CSS).
+2. ✅ US1–US7 implementation tasks completed.
+3. ✅ Build passing (`npm run build`: 67 modules transformed, no errors).
 
-### Pending: Incremental Delivery (US5–US7)
+### Pending
 
-**Phase 7 (US5 – Theme Toggle) [START HERE]**
-1. Implement T023–T024: Add theme init script in `index.html` and define dark mode CSS variables in `tailwind.css`.
-2. Implement T025–T026: Create ThemeToggle component and add to navbar in AppLayout.
-3. Validate US5 independently: toggle theme, verify color swap, reload and confirm persistence, check OS preference fallback.
-
-**Phase 9 (US7 – Tag Filter Row) [PARALLEL WITH PHASE 7]**
-1. Implement T030–T031: Extract tags from images and create TagFilterRow component.
-2. Implement T032–T034: Integrate TagFilterRow into LandingPage, wire URL state, compose with text search.
-3. Validate US7 independently: click tag chip, verify filter and active state, reload and confirm URL state persists, verify tag + text search composition.
-
-**Phase 8 (US6 – Site Footer) [AFTER PHASE 7]**
-1. Implement T027–T029: Create SiteFooter component with three-column desktop / stacked mobile layout and add to AppLayout.
-2. Validate US6 independently: verify three-column layout on desktop (≥ 768 px), stacked on mobile (< 768 px), links work, theme inheritance works.
-
-**Phase 10 (Polish & Validation) [AFTER ALL PHASES]**
-1. Update quickstart.md with final validation checklists for all seven user stories (T035).
-2. Run `npm run build` and verify no errors (T036).
-3. Run full regression validation across 4 breakpoints (375, 768, 1280, 1920 px) and record in quickstart.md (T037).
+1. ⏳ T037 manual regression validation across 375/768/1280/1920 breakpoints and recording results in `quickstart.md`.
 
 ### Validation Criteria by Story
 
@@ -293,6 +274,4 @@ Task: T032–T034 [US7] in LandingPage.jsx (can run parallel with T031 if tag li
 - US4 ✅: Hero shows 50/50 text/collage on desktop; collage scrolls upward continuously; stacks on mobile; headline renders in Playfair Display.
 
 **Pending:**
-- US5 🔄: Theme toggle icon shows in navbar. Clicking it switches colors across all components via CSS variables. Preference persists after reload. OS `prefers-color-scheme` respected on first visit with no saved preference. Head script prevents white flash on dark-mode OS.
-- US6 🔄: Footer appears below main content on all pages. Desktop (≥ 768 px) shows three columns; mobile (< 768 px) stacks to single centered column. Links to FAQ/About navigate; placeholder links render as anchors. Footer colors respond to theme toggle.
-- US7 🔄: Tag chips render in a horizontal scrollable row. Clicking a chip filters grid to show only images with that tag; chip shows active state. Only one chip active at a time. Clicking active chip deactivates filter. Active tag is visible in URL as `?tag=<tagname>`. URL persists after reload. Results show images matching both active tag AND text search query.
+- Final manual regression execution and confirmation for T037.

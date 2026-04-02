@@ -50,3 +50,17 @@ body {
 .hero-title {
   font-family: "Space Grotesk", sans-serif;
 }
+
+/* On hover-capable devices, reveal card actions only on hover; keep visible on touch devices. */
+@media (any-hover: hover) {
+  .card-actions {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .group:hover .card-actions,
+  .group:focus-within .card-actions {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}

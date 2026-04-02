@@ -76,18 +76,18 @@ export function ImageCard({ image, isFavorite, onToggleFavorite, isSelected = fa
         className="h-64 w-full object-cover transition group-hover:scale-105 md:h-72 xl:h-80"
       />
 
-      <div className="absolute bottom-3 right-3 z-20">
-        <div className="flex items-center gap-0">
+      <div className="card-actions absolute bottom-3 right-3 z-20 transition-opacity duration-200">
+        <div className="flex items-center gap-2">
           <button
             type="button"
             aria-label={`Download ${image.title}`}
             disabled={downloadBusy}
             onClick={handleDownload}
-            className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-transparent text-red-500 transition hover:text-red-600 disabled:cursor-not-allowed disabled:opacity-80"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-slate-500/80 text-white transition hover:bg-slate-600 disabled:cursor-not-allowed disabled:opacity-80"
           >
             {downloadBusy ? (
               <span
-                className="size-5 animate-spin rounded-full border-2 border-red-500 border-t-transparent"
+                className="size-5 animate-spin rounded-full border-2 border-white border-t-transparent"
                 aria-hidden="true"
               />
             ) : (
@@ -101,7 +101,7 @@ export function ImageCard({ image, isFavorite, onToggleFavorite, isSelected = fa
             )}
           </button>
 
-          <FavoriteToggle isFavorite={isFavorite} onToggle={() => onToggleFavorite(image.id)} className="h-10 w-10 size-40" />
+          <FavoriteToggle isFavorite={isFavorite} onToggle={() => onToggleFavorite(image.id)} />
         </div>
 
         {downloadError ? (
