@@ -4,6 +4,21 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Modern Stock Gallery</title>
+    <script>
+      (function() {
+        // Initialize theme before React hydration to prevent FOUC
+        const savedTheme = localStorage.getItem('theme-preference');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        
+        // Determine theme: saved preference > OS preference > light
+        const theme = savedTheme || (prefersDark ? 'dark' : 'light');
+        
+        // Apply dark class to html element
+        if (theme === 'dark') {
+          document.documentElement.classList.add('dark');
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

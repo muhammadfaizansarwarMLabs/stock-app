@@ -18,14 +18,14 @@ export function DownloadButton() {
   const isDisabled = !isOnLandingPage || selectedCount === 0 || isLoading;
 
   const buttonClassName = [
-    "inline-flex items-center rounded-full px-4 py-2 text-sm font-semibold transition",
+    "inline-flex items-center rounded-full px-5 py-3 text-base font-semibold transition",
     isDisabled
       ? "cursor-not-allowed bg-slate-700 text-slate-300 opacity-60"
       : "bg-white text-slate-900 hover:bg-slate-100"
   ].join(" ");
 
   const countClassName = [
-    "rounded-full border px-3 py-1 text-xs font-semibold",
+    "rounded-full border px-4 py-2 text-sm font-semibold",
     selectedCount > 0 ? "border-white/40 bg-white/10 text-white" : "border-slate-600 text-slate-300"
   ].join(" ");
 
@@ -38,7 +38,7 @@ export function DownloadButton() {
   };
 
   return (
-    <div className="ml-2 inline-flex items-center gap-2">
+    <div className="ml-2 inline-flex items-center gap-3">
       <button type="button" className={buttonClassName} onClick={handleDownload} disabled={isDisabled}>
         {isLoading ? "Preparing..." : "Download Selected"}
       </button>

@@ -1183,3 +1183,23 @@ export const images = [
 
 export const getImageById = (id) => images.find((image) => image.id === id);
 export const popularImages = images.filter((image) => image.isPopular);
+
+export const getTopTags = (limit = 12) => {
+  // Count tag frequencies
+  const tagCount = {};
+  images.forEach((image) => {
+    image.tags.forEach((tag) => {
+      tagCount[tag] = (tagCount[tag] || 0) + 1;
+    });
+  });
+
+  // Sort by frequency (descending) and get top N tags
+  return Object.entries(tagCount)
+    .sort(([, countA], [, countB]) => countB - countA)
+    .slice(0, limit)
+    .map(([tag]) => tag);
+};
+
+export const getImagesByTag = (tag) => {
+  return images.filter((image) => image.tags.includes(tag));
+};

@@ -1,10 +1,50 @@
+import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { FavoriteToggle } from "../favorites/FavoriteToggle";
+import { downloadImage } from "../../utils/download-image";
 
 export function ImageCard({ image, isFavorite, onToggleFavorite, isSelected = false, onToggleSelect = () => {} }) {
   const location = useLocation();
+  const [downloadBusy, setDownloadBusy] = useState(false);
+  const [downloadError, setDownloadError] = useState("");
 
   const checkboxVisibilityClass = isSelected ? "opacity-100" : "opacity-100 sm:opacity-0 sm:group-hover:opacity-100";
+
+  useEffect(() => {
+    if (!downloadError) {
+      return undefined;
+    }
+
+    const timeoutId = window.setTimeout(() => {
+      setDownloadError("");
+    }, 3000);
+
+    return () => window.clearTimeout(timeoutId);
+  }, [downloadError]);
+
+  const stopOverlayInteraction = (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+  };
+
+  const handleDownload = async (event) => {
+    stopOverlayInteraction(event);
+
+    if (downloadBusy) {
+      return;
+    }
+
+    setDownloadBusy(true);
+    setDownloadError("");
+
+    const result = await downloadImage(image, null);
+
+    setDownloadBusy(false);
+
+    if (!result.ok) {
+      setDownloadError(result.message ?? "Download failed.");
+    }
+  };
 
   return (
     <article
@@ -29,16 +69,52 @@ export function ImageCard({ image, isFavorite, onToggleFavorite, isSelected = fa
           onChange={onToggleSelect}
         />
       </div>
-      <img src={image.thumbnailUrl} alt={image.altText} className="h-48 w-full object-cover transition group-hover:scale-105" />
-      <div className="space-y-3 p-4">
-        <div className="flex items-start justify-between gap-2">
-          <h3 className="text-base font-semibold text-slate-900">{image.title}</h3>
-          <div className="relative z-20">
-            <FavoriteToggle isFavorite={isFavorite} onToggle={() => onToggleFavorite(image.id)} />
-          </div>
+
+      <img
+        src={image.thumbnailUrl}
+        alt={image.altText}
+        className="h-64 w-full object-cover transition group-hover:scale-105 md:h-72 xl:h-80"
+      />
+
+      <div className="absolute bottom-3 right-3 z-20">
+        <div className="flex items-center gap-0">
+          <button
+            type="button"
+            aria-label={`Download ${image.title}`}
+            disabled={downloadBusy}
+            onClick={handleDownload}
+            className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-transparent text-red-500 transition hover:text-red-600 disabled:cursor-not-allowed disabled:opacity-80"
+          >
+            {downloadBusy ? (
+              <span
+                className="size-5 animate-spin rounded-full border-2 border-red-500 border-t-transparent"
+                aria-hidden="true"
+              />
+            ) : (
+              <svg viewBox="0 0 20 20" fill="currentColor" className="size-5" aria-hidden="true">
+                <path
+                  fillRule="evenodd"
+                  d="M10 2.75a.75.75 0 0 1 .75.75v7.19l2.22-2.22a.75.75 0 1 1 1.06 1.06l-3.5 3.5a.75.75 0 0 1-1.06 0l-3.5-3.5a.75.75 0 0 1 1.06-1.06l2.22 2.22V3.5A.75.75 0 0 1 10 2.75ZM4.5 13a.75.75 0 0 1 .75.75v.75c0 .138.112.25.25.25h9a.25.25 0 0 0 .25-.25v-.75a.75.75 0 0 1 1.5 0v.75A1.75 1.75 0 0 1 14.5 16.5h-9A1.75 1.75 0 0 1 3.75 14.5v-.75A.75.75 0 0 1 4.5 13Z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            )}
+          </button>
+
+          <FavoriteToggle isFavorite={isFavorite} onToggle={() => onToggleFavorite(image.id)} className="h-10 w-10 size-40" />
         </div>
-        <p className="text-xs uppercase tracking-[0.2em] text-slate-500">{image.tags.slice(0, 2).join(" • ")}</p>
+
+        {downloadError ? (
+          <p role="alert" className="pt-2 text-right text-xs font-medium text-red-500">
+            {downloadError}
+          </p>
+        ) : null}
       </div>
+
+      {/* <div className="space-y-3 p-4">
+        <h3 className="text-base font-semibold text-slate-900">{image.title}</h3>
+        <p className="text-xs uppercase tracking-[0.2em] text-slate-500">{image.tags.slice(0, 2).join(" • ")}</p>
+      </div> */}
     </article>
   );
 }
