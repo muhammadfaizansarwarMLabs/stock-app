@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { downloadImage } from "../../utils/download-image";
 import { ImagePreviewPanel } from "./ImagePreviewPanel";
@@ -36,6 +36,29 @@ export function ImageModal({ image, onReplaceUploadedImage, onClearUploadedImage
   const changeFileInputRef = useRef(null);
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
+  const [isMobileViewport, setIsMobileViewport] = useState(() => window.innerWidth <= 768);
+
+  useEffect(() => {
+    const onResize = () => {
+      setIsMobileViewport(window.innerWidth <= 768);
+    };
+
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
+
+  useEffect(() => {
+    if (!isMobileViewport) {
+      return undefined;
+    }
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [isMobileViewport]);
 
   // T009 — Zoom state
   const [zoom, setZoom] = useState(ZOOM_DEFAULT);
@@ -129,23 +152,28 @@ export function ImageModal({ image, onReplaceUploadedImage, onClearUploadedImage
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 p-4"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-3 md:bg-slate-950/70 md:p-4"
       role="dialog"
       aria-modal="true"
       aria-label={`Preview: ${image.title}`}
     >
-      <div className="card-surface relative w-full max-w-4xl overflow-y-hidden max-h-[95vh] p-5 md:p-8">
-        {/* T008 — Cross icon close button */}
-        <button
-          type="button"
-          onClick={closeModal}
-          aria-label="Close image modal"
-          className="absolute right-2 top-1 rounded-full bg-orange-500 p-1.5 text-white transition hover:bg-orange-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-orange-500"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="size-5" aria-hidden="true">
-            <path d="M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22Z" />
-          </svg>
-        </button>
+      <div className="card-surface relative flex w-full max-w-[22rem] flex-col overflow-hidden rounded-2xl max-h-[calc(100dvh-1.5rem)] md:max-w-4xl md:max-h-[95vh] md:rounded-[2rem]">
+        {/* T008 — Close button header: always visible, never scrolls away */}
+        <div className="flex shrink-0 items-center justify-end px-3 pt-3 md:px-8 md:pt-8">
+          <button
+            type="button"
+            onClick={closeModal}
+            aria-label="Close image modal"
+            className="rounded-full bg-orange-500 p-2 text-white transition hover:bg-orange-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-orange-500"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="size-5" aria-hidden="true">
+              <path d="M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22Z" />
+            </svg>
+          </button>
+        </div>
+
+        {/* Scrollable modal body */}
+        <div className="flex-1 overflow-y-auto px-4 pb-4 md:px-8 md:pb-8">
 
         {/* T011+T016+T033+T039 — Pass all 9 props to preview panel */}
         <ImagePreviewPanel
@@ -162,7 +190,7 @@ export function ImageModal({ image, onReplaceUploadedImage, onClearUploadedImage
         />
 
         {/* T010 — Zoom controls + Download */}
-        <div className="mt-5 flex flex-wrap items-center gap-3">
+        <div className="mt-4 flex flex-wrap items-center gap-2 md:mt-5 md:gap-3">
           {/* Zoom out */}
           <button
             type="button"
@@ -198,7 +226,7 @@ export function ImageModal({ image, onReplaceUploadedImage, onClearUploadedImage
             type="button"
             onClick={handleDownload}
             disabled={busy}
-            className="rounded-xl bg-orange-500 px-4 py-2 text-sm font-semibold text-white transition hover:bg-orange-600 disabled:cursor-not-allowed disabled:bg-orange-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-orange-500"
+            className="w-full rounded-xl bg-orange-500 px-4 py-2 text-sm font-semibold text-white transition hover:bg-orange-600 disabled:cursor-not-allowed disabled:bg-orange-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-orange-500 sm:w-auto"
           >
             {busy ? "Preparing…" : "Download"}
           </button>
@@ -208,7 +236,7 @@ export function ImageModal({ image, onReplaceUploadedImage, onClearUploadedImage
               <button
                 type="button"
                 onClick={handleChangeImageClick}
-                className="rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-slate-400 hover:bg-slate-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-orange-500"
+                className="w-full rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-slate-400 hover:bg-slate-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-orange-500 sm:w-auto"
               >
                 Change Image
               </button>
@@ -236,6 +264,8 @@ export function ImageModal({ image, onReplaceUploadedImage, onClearUploadedImage
           onReset={handleReset}
           onResetAll={handleResetAll}
         />
+
+        </div>{/* end scrollable body */}
       </div>
 
       {/* Overlay close */}
