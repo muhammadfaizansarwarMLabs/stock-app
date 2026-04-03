@@ -37,8 +37,8 @@ export function AppLayout({ children }) {
   return (
     <>
       <div className="page-shell">
-        <header className="sticky top-4 z-50 mb-8 rounded-[2rem] bg-slate-950/70 px-6 py-5 backdrop-blur md:px-8 md:py-6">
-          <div className="flex items-center justify-between gap-4 md:flex-row md:items-center md:justify-between">
+          <header className="sticky top-4 z-50 mb-8 rounded-[2rem] bg-slate-950/70 px-6 py-5 backdrop-blur md:flex md:items-center md:justify-between md:px-8 md:py-6 ">
+          <div className="flex items-center justify-between gap-4">
             <Link
               to="/"
               onClick={closeMobileMenu}
@@ -74,7 +74,7 @@ export function AppLayout({ children }) {
 
           <nav
             id="primary-navigation"
-            className={`${isMobileMenuOpen ? "mt-4 flex" : "hidden"} flex-col gap-3 md:mt-0 md:flex md:flex-row md:flex-wrap md:items-center`}
+            className={`${isMobileMenuOpen ? "mt-4 flex" : "hidden"} flex-col gap-3 md:mt-0 md:flex md:flex-row md:flex-wrap md:items-center md:justify-end`}
             aria-label="Primary"
           >
             {navItems.map((item) => (
