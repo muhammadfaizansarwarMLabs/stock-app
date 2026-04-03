@@ -3,7 +3,15 @@
 **Feature Branch**: `005-local-image-upload-effects`  
 **Created**: 2026-04-03  
 **Status**: Draft  
-**Input**: User description: "I want to add a button just below the Filter by title input to upload image from laptop/device, open uploaded image in the same preview modal used for stock images, let user apply effects and download the effected image, and show a Change Image button beside Download when uploaded image is open."
+**Input**: User description: "I want to add a button just below the Filter by title input to upload image from laptop/device, open uploaded image in the same preview modal used for stock images, let user apply effects and download the effected image, and show a Change Image button beside Download when uploaded image is open. Also make the site responsive for mobile devices, especially the navbar and modal."
+
+## Clarifications
+
+### Session 2026-04-03
+
+- Q: After selecting a nav link on mobile, should the expanded navbar auto-close or stay open? → A: Auto-close immediately after any nav link is selected.
+- Q: What mobile modal layout pattern should be used? → A: Use a full-screen modal on mobile with internal scrolling.
+- Q: What breakpoint should trigger mobile navbar toggle and full-screen modal behavior? → A: Apply mobile behavior at <=768px.
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -53,6 +61,26 @@ While editing an uploaded image, a user wants to download the effected result an
 3. **Given** the user clicks "Change Image", **When** they select a new supported image file, **Then** the modal preview updates to the new uploaded image.
 4. **Given** the user clicks "Change Image" and cancels file selection, **When** the chooser closes, **Then** the current uploaded image remains in preview.
 
+---
+
+### User Story 4 - Responsive Navbar and Modal on Mobile (Priority: P1)
+
+A mobile user wants the navigation and preview modal to be fully usable on small screens, including a toggle button to show and hide navbar links.
+
+**Why this priority**: Mobile responsiveness is critical for usability and prevents key actions from being blocked or hidden on smaller devices.
+
+**Independent Test**: Open the site on a mobile viewport, verify a navbar toggle button appears and can open/close the nav links, then open the image modal and verify all controls and actions remain visible and usable without layout breakage.
+
+**Acceptance Scenarios**:
+
+1. **Given** the viewport is mobile-sized (<=768px), **When** the header renders, **Then** the navbar shows a toggle button to expand and collapse navigation links.
+2. **Given** the mobile navbar is collapsed, **When** the user taps the toggle button, **Then** the navigation links become visible and accessible.
+3. **Given** the mobile navbar is expanded, **When** the user taps the toggle button again, **Then** the navigation links are hidden.
+4. **Given** an image modal is open on a mobile viewport, **When** the user views preview and controls, **Then** the modal content fits the viewport with usable scrolling and no clipped critical actions.
+5. **Given** the user resizes between desktop and mobile widths, **When** layout mode changes, **Then** navbar and modal adapt without overlapping, broken alignment, or inaccessible buttons.
+6. **Given** the mobile navbar is expanded, **When** the user selects any navigation link, **Then** the menu closes immediately after navigation is triggered.
+7. **Given** the viewport is mobile-sized (<=768px), **When** the image modal opens, **Then** it uses a full-screen layout and keeps preview/actions accessible via internal scrolling.
+
 ### Edge Cases
 
 - User selects a non-image file type from the device chooser.
@@ -61,6 +89,10 @@ While editing an uploaded image, a user wants to download the effected result an
 - User tries to download before the uploaded image preview is fully ready.
 - User starts changing image repeatedly and cancels one or more file chooser attempts.
 - User closes the modal during an upload-change workflow and reopens it from upload control.
+- Mobile navbar is expanded and the user navigates to another route; menu state should reset predictably.
+- Mobile navbar toggle is activated repeatedly; layout must remain stable without flicker or overlap.
+- Modal is opened on very small screens (e.g., 320px width) and all primary actions must remain reachable.
+- Device orientation changes while modal is open; preview and controls must remain usable.
 
 ## Requirements *(mandatory)*
 
@@ -78,12 +110,23 @@ While editing an uploaded image, a user wants to download the effected result an
 - **FR-010**: If the selected file is not a supported image, the system MUST show a clear user-facing validation message and MUST NOT open or replace the modal image.
 - **FR-011**: The upload and change-image flow MUST work on both desktop and mobile form factors.
 - **FR-012**: Upload-specific controls (including "Change Image") MUST only appear when relevant to uploaded images and MUST NOT disrupt the existing stock-image preview workflow.
+- **FR-013**: The header/navbar MUST be responsive across supported viewport sizes, including mobile breakpoints.
+- **FR-014**: On mobile viewports, the navbar MUST provide a toggle button that expands and collapses navigation links.
+- **FR-015**: The navbar toggle control MUST expose clear accessible state (for example, expanded/collapsed semantics) and remain keyboard/touch operable.
+- **FR-016**: On mobile viewports, the image modal MUST render as a full-screen overlay (viewport-sized) with internal scrolling for preview and controls.
+- **FR-017**: Modal content MUST avoid horizontal overflow on mobile viewports and maintain readable spacing/typography.
+- **FR-018**: Existing desktop navbar and modal behavior MUST remain functionally unchanged while adding responsive mobile behavior.
+- **FR-019**: When a mobile nav link is selected from an expanded menu, the menu MUST auto-collapse immediately.
+- **FR-020**: When the full-screen mobile modal is open, background page scrolling MUST be prevented until the modal closes.
+- **FR-021**: Mobile navbar toggle behavior and full-screen modal behavior MUST apply at viewport widths <=768px.
 
 ### Key Entities *(include if feature involves data)*
 
 - **Uploaded Image**: A user-selected local image file intended for modal preview, effects adjustment, and download.
 - **Preview Session**: The active modal state containing the current image source (stock or uploaded), effect settings, and action availability.
 - **Modal Action State**: Context that determines when Download and "Change Image" are shown and enabled.
+- **Navigation Menu State**: UI state indicating whether mobile navigation links are expanded or collapsed.
+- **Modal Viewport Mode**: UI state indicating whether modal is using desktop dialog layout or mobile full-screen layout.
 
 ## Success Criteria *(mandatory)*
 
@@ -95,6 +138,12 @@ While editing an uploaded image, a user wants to download the effected result an
 - **SC-004**: At least 90% of users can complete the flow "upload -> apply effect -> download" on first attempt.
 - **SC-005**: When an uploaded image is active in modal, the "Change Image" action is visible beside Download in 100% of tested sessions.
 - **SC-006**: In validation runs, canceling file selection preserves existing preview state in 100% of cases.
+- **SC-007**: In mobile viewport validation (320px-768px widths), users can open and close the navbar menu in 100% of test runs.
+- **SC-008**: In mobile modal validation, 100% of primary modal actions (Close, Download, Change Image when applicable) remain reachable without layout breakage.
+- **SC-009**: No horizontal scrolling is introduced on header/navbar and modal containers across supported mobile viewport tests.
+- **SC-010**: In mobile navbar validation, menu state auto-collapses on 100% of link-selection interactions.
+- **SC-011**: In mobile modal validation, modal opens in full-screen mode in 100% of supported mobile viewport tests.
+- **SC-012**: With mobile modal open, background page scroll remains locked in 100% of validation runs.
 
 ## Assumptions
 
@@ -103,3 +152,5 @@ While editing an uploaded image, a user wants to download the effected result an
 - Upload handling is limited to local, session-based usage and does not require account-level persistence.
 - "Change Image" replaces the current uploaded image in the active modal session rather than opening multiple uploaded images at once.
 - Existing stock image browsing and filtering behavior remains unchanged unless an uploaded image flow is actively used.
+- Responsive behavior targets viewport widths from 320px through 768px for mobile mode.
+- Full-screen modal behavior applies only to mobile viewport mode; desktop retains dialog-style presentation.

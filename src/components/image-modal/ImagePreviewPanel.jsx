@@ -34,9 +34,9 @@ export function ImagePreviewPanel({
   }, [image.fullImageUrl]);
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3 md:space-y-4">
       {/* Fixed preview area keeps modal height stable while the image loads */}
-      <div className="relative h-[55vh] overflow-hidden rounded-2xl bg-slate-100">
+      <div className="relative h-[38vh] overflow-hidden rounded-2xl bg-slate-100 md:h-[55vh]">
         {!isLoaded ? (
           <div
             className="absolute inset-0 flex items-center justify-center"

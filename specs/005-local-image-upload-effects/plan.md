@@ -1,39 +1,35 @@
-# Implementation Plan: Local Image Upload Effects
+# Implementation Plan: Local Image Upload Effects + Mobile Responsiveness
 
-**Branch**: `005-local-image-upload-effects` | **Date**: 2026-04-03 | **Spec**: [spec.md](./spec.md)
+**Branch**: `005-local-image-upload-effects` | **Date**: 2026-04-03 | **Spec**: `/specs/005-local-image-upload-effects/spec.md`
 **Input**: Feature specification from `/specs/005-local-image-upload-effects/spec.md`
 
 ## Summary
 
-Add a local-device upload entry point below the landing page title filter, open selected images in the existing image preview modal, reuse existing effect controls for uploaded content, download the effected uploaded image, and show a contextual "Change Image" action beside Download when the modal is displaying uploaded content.
-
-The implementation reuses the current modal + effects pipeline with a source abstraction for stock vs uploaded image, adds upload/change-image state in the router/modal flow, and preserves all existing stock-image behavior and URL-based modal navigation.
+Extend the completed local image upload workflow with responsive UX guarantees by implementing a mobile navbar toggle and a full-screen modal mode for viewport widths `<=768px`, while preserving existing desktop behavior and existing upload/effects/download flows.
 
 ## Technical Context
 
-**Language/Version**: JavaScript (ES2022), JSX via React 18  
-**Primary Dependencies**: React 18, React Router v6, Vite 5.4, existing in-repo image utilities (`download-image`, `render-image-with-effects`)  
-**Storage**: In-memory React state for uploaded image session + browser object URLs (revoked on replacement/close); existing `localStorage` usage unchanged  
-**Testing**: Vitest + React Testing Library (targeted unit/integration), plus manual verification via `quickstart.md`  
-**Target Platform**: Modern desktop and mobile browsers (static SPA)  
-**Project Type**: Frontend web application (single React SPA)  
-**Performance Goals**: Modal open after file selection feels immediate (<2s for typical images), preview updates remain responsive, no regressions to existing stock-image modal interactions  
-**Constraints**: No backend, no new npm packages, preserve constitution-required flows, maintain accessibility labels and keyboard interactions for new controls  
-**Scale/Scope**: Focused UI enhancement touching landing filter area, routing/modal handoff, modal action row, and download source handling (approximately 6-10 files)
+**Language/Version**: JavaScript (ES2022) + React 18.3  
+**Primary Dependencies**: `react`, `react-dom`, `react-router-dom`, `vite`, `tailwindcss`, `jszip`  
+**Storage**: Browser memory for upload session state + object URLs; existing favorites persistence remains unchanged  
+**Testing**: Vitest + React Testing Library; manual responsive regression checklist  
+**Target Platform**: Modern desktop and mobile browsers (responsive web app)  
+**Project Type**: Single-project frontend SPA  
+**Performance Goals**: Modal open interactions remain smooth; no added network calls for local uploads; keep build healthy (`npm run build`)  
+**Constraints**: Static-first architecture, no backend dependency, preserve constitution-required flows, mobile breakpoint `<=768px`  
+**Scale/Scope**: Existing stock gallery with landing/favorites/about/faq pages and modal editing flow
 
 ## Constitution Check
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-| Principle | Status | Notes |
-|-----------|--------|-------|
-| I. Static-First Delivery | PASS | Local file upload handled client-side only; no server dependency added |
-| II. Browsing and Filtering | PASS | Existing title filter behavior is preserved; upload control is additive beneath filter |
-| III. Image Viewing and Download | PASS | Existing modal remains the viewing surface; download action is extended for uploaded source |
-| IV. Favorites Management | PASS | Favorites flows are unchanged for stock images |
-| V. Basic Usability and Accessibility | PASS | New buttons require labels, keyboard access, and mobile/desktop support |
+- **I. Static-First Delivery**: PASS. Changes are client-only React/CSS behavior.
+- **II. Browsing and Filtering**: PASS. Upload and responsive nav do not remove grid/filter behavior.
+- **III. Image Viewing and Download**: PASS. Modal and download remain core and are extended for mobile usability.
+- **IV. Favorites Management**: PASS. No impact to favorites add/remove/list behavior.
+- **V. Basic Usability and Accessibility**: PASS with planned accessible navbar toggle semantics and keyboard/touch operability.
 
-Initial gate result: PASS.
+Post-Phase-1 recheck: PASS. Research/design artifacts preserve all constitution principles and strengthen mobile usability.
 
 ## Project Structure
 
@@ -54,79 +50,30 @@ specs/005-local-image-upload-effects/
 
 ```text
 src/
+├── app/
+│   └── router.jsx
+├── components/
+│   ├── image-modal/
+│   │   ├── ImageModal.jsx
+│   │   └── ImagePreviewPanel.jsx
+│   └── layout/
+│       └── AppLayout.jsx
 ├── pages/
 │   └── landing/
-│       └── LandingPage.jsx                # Add upload action placement below title filter
-├── components/
-│   ├── filters/
-│   │   └── TitleFilter.jsx                # Existing anchor point for placement context
-│   └── image-modal/
-│       ├── ImageModal.jsx                 # Add uploaded-image mode + Change Image button
-│       ├── ImagePreviewPanel.jsx          # Ensure preview supports uploaded source URLs
-│       └── EffectsPanel.jsx               # Reused unchanged unless labeling tweaks required
-├── app/
-│   └── router.jsx                         # Modal source wiring for stock vs uploaded image session
+│       └── LandingPage.jsx
 └── utils/
-    ├── download-image.js                  # Support downloaded source from uploaded object URL
-    └── render-image-with-effects.js       # Reused for effects-applied export
+    ├── uploaded-image-source.js
+    ├── download-image.js
+    └── render-image-with-effects.js
 
 tests/
-├── unit/
-│   └── [new/updated modal and upload state tests]
+├── contract/
 ├── integration/
-│   └── [new landing->modal upload flow tests]
-└── contract/
-    └── [optional UI contract assertions]
+└── unit/
 ```
 
-**Structure Decision**: Use the existing single-project React SPA structure. Changes remain localized to landing controls, router-modal state, modal actions, and download utility behavior without introducing new top-level modules.
-
-## Phase 0: Research
-
-Research outcomes captured in `research.md` resolve all planning unknowns:
-
-1. Uploaded image handoff strategy from landing page to modal while preserving existing route/modal behavior.
-2. Safe browser object URL lifecycle management for upload and change-image operations.
-3. Download path decision for uploaded images with effects vs unchanged source.
-4. Validation behavior for unsupported file types and canceled picker flows.
-5. Accessibility and responsive requirements for new upload/change actions.
-
-All `NEEDS CLARIFICATION` items: NONE.
-
-## Phase 1: Design and Contracts
-
-Artifacts produced:
-
-1. `data-model.md` defines entities for uploaded image source, modal source context, and action visibility state.
-2. `contracts/ui-contract.md` defines UI interaction contracts for upload button placement, modal open/change behavior, and download outcomes.
-3. `quickstart.md` defines run + manual verification flow for upload, effects, download, and change-image scenarios.
-
-Agent context update:
-
-1. Run `.specify/scripts/bash/update-agent-context.sh copilot` after writing design artifacts.
-
-## Post-Design Constitution Check
-
-Re-check result after Phase 1 design: PASS.
-
-1. Static-first requirement remains intact (local browser APIs only).
-2. Core browse/filter, modal, and favorites flows remain preserved.
-3. New controls stay additive and accessible.
-4. No constitution violations or scope contractions identified.
-
-## Phase 2: Task Planning Preview
-
-Implementation sequencing preview:
-
-1. Add upload trigger below the title filter area on landing page.
-2. Add local file validation and object URL generation for selected files.
-3. Wire uploaded image session into modal opening flow while preserving stock route behavior.
-4. Extend modal action row to show "Change Image" beside Download only for uploaded source.
-5. Update download utility to support uploaded source download with effects-applied rendering parity.
-6. Implement cancellation and invalid-file safeguards.
-7. Add/adjust tests for upload open, effected download, and change-image replacement.
-8. Run build/tests and complete quickstart regression checks.
+**Structure Decision**: Keep the current single-project React SPA structure. Implement responsive navbar behavior in `AppLayout.jsx`, mobile modal presentation adjustments in `ImageModal`/related styles, and preserve upload source/session behavior already integrated via router and utils.
 
 ## Complexity Tracking
 
-No constitution violations or special complexity exemptions required.
+No constitution violations identified; complexity tracking not required.

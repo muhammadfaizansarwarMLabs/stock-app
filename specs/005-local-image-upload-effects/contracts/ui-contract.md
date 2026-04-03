@@ -6,6 +6,17 @@
 
 ## Component Contracts
 
+### `AppLayout` Responsive Navbar
+
+**Responsive contract**:
+- At viewport widths `<=768px`, navbar renders a toggle control to expand/collapse nav links.
+- At widths `>768px`, navbar remains visible without mobile toggle dependency.
+
+**Behavior contract**:
+1. Toggle button updates menu visibility state and exposed expanded/collapsed semantics.
+2. Selecting any nav link while mobile menu is expanded auto-collapses the menu immediately.
+3. Mobile menu interactions remain keyboard and touch operable.
+
 ### `LandingPage` Upload Entry
 
 **Location contract**:
@@ -28,6 +39,17 @@
 3. `Change Image` button appears beside Download only when `image.isUploaded === true`.
 4. Clicking `Change Image` reopens image picker and swaps modal source on valid selection.
 5. Canceling Change Image keeps current preview unchanged.
+
+### `ImageModal` Responsive Mode
+
+**Responsive contract**:
+- At viewport widths `<=768px`, modal renders full-screen and allows internal scrolling for preview/effects/actions.
+- At widths `>768px`, modal retains existing desktop dialog-style layout.
+
+**Behavior contract**:
+1. Mobile full-screen modal prevents background page scrolling while open.
+2. Primary actions (Close, Download, Change Image when uploaded) remain reachable without horizontal overflow.
+3. Orientation changes keep controls usable and visible.
 
 ### `downloadImage` Utility
 
@@ -62,11 +84,14 @@
 ## Accessibility Contract
 
 - `Upload Image` and `Change Image` are keyboard-focusable buttons with clear text labels.
+- Mobile navbar toggle is keyboard-focusable and exposes expanded/collapsed state.
 - File-picker-trigger controls have visible focus styling consistent with existing controls.
 - Validation errors are announced as user-visible inline messages in upload/modal context.
 
 ## Responsive Contract
 
 - Upload control remains visible and usable on mobile and desktop.
+- Navbar toggle + collapsible menu behavior applies at `<=768px`, with auto-close on link selection.
+- Modal switches to full-screen mode at `<=768px`; desktop dialog behavior remains unchanged.
 - Modal action row (Zoom controls, Download, Change Image) wraps gracefully on narrow viewports.
 - No horizontal overflow introduced by new action placement.

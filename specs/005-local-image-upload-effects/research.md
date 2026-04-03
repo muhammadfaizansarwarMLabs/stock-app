@@ -64,14 +64,35 @@
 - Validate only by file extension: rejected as less reliable than MIME checks.
 - Silently ignore invalid files: rejected because spec requires clear user feedback.
 
-## 7. Accessibility and Responsiveness
+## 7. Mobile Navbar Behavior
 
-**Decision**: New actions (`Upload Image`, `Change Image`) remain semantic buttons with explicit labels and keyboard support, and are included in responsive layouts without introducing fixed-width overflow.
+**Decision**: Add a dedicated mobile navbar toggle for viewport widths `<=768px` to show/hide nav links, with menu state auto-collapsing immediately after any navigation link selection.
 
-**Rationale**: Constitution principle V requires keyboard-accessible and mobile/desktop-functional controls.
+**Rationale**: The clarified spec requires explicit mobile toggle behavior and predictable state reset on route navigation.
 
 **Alternatives considered**:
-- Icon-only upload/change actions: rejected due to lower discoverability and weaker accessibility.
+- Keep navbar always expanded on mobile: rejected due to limited space and overlap risk.
+- Keep menu open after navigation: rejected per clarification and weaker UX continuity.
+
+## 8. Mobile Modal Presentation
+
+**Decision**: Use a full-screen modal overlay on mobile (`<=768px`) with internal scrolling for preview/effects/actions and lock background page scroll while open.
+
+**Rationale**: Full-screen mode avoids clipped controls on small screens and ensures primary actions remain reachable.
+
+**Alternatives considered**:
+- Keep desktop-style centered dialog on mobile: rejected due to cramped controls and overflow risk.
+- Bottom-sheet modal: rejected as unnecessary UX divergence from current flow.
+
+## 9. Accessibility and Responsive Guardrails
+
+**Decision**: Preserve semantic button controls for `Upload Image`, `Change Image`, and navbar toggle (`aria-expanded`, touch/keyboard operable), and enforce no horizontal overflow in header/modal mobile states.
+
+**Rationale**: Constitution principle V mandates keyboard-accessible controls and usable desktop/mobile behavior.
+
+**Alternatives considered**:
+- Icon-only unlabeled controls: rejected due to lower discoverability and accessibility risk.
+- Rely only on visual collapse without accessible state: rejected due to assistive tech ambiguity.
 
 ## Summary of Decisions
 
@@ -83,4 +104,6 @@
 | Download behavior | Existing effects-aware logic retained for uploaded sources |
 | Change image visibility | Only when uploaded image is active; shown beside Download |
 | Validation | MIME-based `image/*` checks with user-facing invalid file message |
+| Mobile navbar | Toggle/collapse behavior at `<=768px`; auto-close on link selection |
+| Mobile modal | Full-screen overlay at `<=768px` with internal scroll + background scroll lock |
 | Accessibility | Labeled buttons, keyboard support, responsive layout retained |
