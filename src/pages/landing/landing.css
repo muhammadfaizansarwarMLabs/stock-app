@@ -1,0 +1,29 @@
+.landing-hero {
+  background:
+    linear-gradient(135deg, rgba(230, 238, 250, 0.97), rgba(210, 226, 248, 0.97)),
+    radial-gradient(circle at 15% 20%, rgba(239, 131, 84, 0.28), transparent 40%);
+  position: relative;
+  overflow: hidden;
+}
+
+.landing-hero::after {
+  content: "";
+  position: absolute;
+  right: -4rem;
+  top: -4rem;
+  width: 13rem;
+  height: 13rem;
+  border-radius: 9999px;
+  background: linear-gradient(45deg, rgba(11, 160, 203, 0.35), rgba(239, 131, 84, 0.4));
+  filter: blur(10px);
+}
+
+@keyframes scroll-up {
+  from { transform: translateY(0); }
+  to   { transform: translateY(-50%); }
+}
+
+.hero-collage-track {
+  animation: scroll-up 28s linear infinite;
+  will-change: transform;
+}

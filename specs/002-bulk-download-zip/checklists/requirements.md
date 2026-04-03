@@ -1,8 +1,8 @@
-# Specification Quality Checklist: Modern Stock Images Experience
+# Specification Quality Checklist: Bulk Image Download with ZIP
 
-**Purpose**: Validate specification completeness and quality before proceeding to planning  
-**Created**: 2026-03-30  
-**Feature**: [Link to spec.md](../spec.md)
+**Purpose**: Validate specification completeness and quality before proceeding to planning
+**Created**: 2026-03-31
+**Feature**: [spec.md](../spec.md)
 
 ## Content Quality
 
@@ -31,6 +31,10 @@
 
 ## Notes
 
-- Validation iteration 1: All checklist items passed. No follow-up spec edits required.
-- Implementation run 2026-03-30: `npm install` and `npm run build` passed for the static React + Tailwind app.
-- Implementation run 2026-03-30: Remaining manual checks are tracked in `../quickstart.md` under the validation checklist.
+- All 5 clarifications were resolved in the specify session:
+  - Checkbox visibility: hover on desktop, always on mobile
+  - Button placement: navbar, right of FAQ
+  - Select All scope: visible/filtered images only
+  - Post-download selections: remain checked
+  - Failure notification: inline alert below navbar
+- Specification is complete and ready for `/speckit.plan`
