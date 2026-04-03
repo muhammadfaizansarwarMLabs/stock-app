@@ -37,7 +37,7 @@ export function AppLayout({ children }) {
   return (
     <>
       <div className="page-shell">
-          <header className="sticky top-4 z-50 mb-8 rounded-[2rem] bg-slate-950/70 px-6 py-5 backdrop-blur md:flex md:items-center md:justify-between md:px-8 md:py-6 ">
+          <header className="z-50 mb-8 rounded-[2rem] bg-slate-950/70 px-6 py-5 backdrop-blur md:sticky md:top-4 md:flex md:items-center md:justify-between md:px-8 md:py-6">
           <div className="flex items-center justify-between gap-4">
             <Link
               to="/"

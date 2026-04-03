@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 
 export function ThemeToggle() {
-  const [isDark, setIsDark] = useState(false);
+  const [isDark, setIsDark] = useState(() => document.documentElement.classList.contains('dark'));
 
   // Initialize theme state from DOM on mount
   useEffect(() => {
