@@ -24,6 +24,20 @@ function slugify(title) {
   return title.replace(/\s+/g, "-").toLowerCase();
 }
 
+function getFileExtension(image, blob) {
+  if (image?.fileName && image.fileName.includes(".")) {
+    return image.fileName.slice(image.fileName.lastIndexOf(".")).toLowerCase();
+  }
+
+  const type = blob?.type || image?.mimeType || "";
+  if (type.includes("png")) return ".png";
+  if (type.includes("webp")) return ".webp";
+  if (type.includes("gif")) return ".gif";
+  if (type.includes("bmp")) return ".bmp";
+  if (type.includes("svg")) return ".svg";
+  return ".jpg";
+}
+
 function triggerDownload(url, filename) {
   const a = document.createElement("a");
   a.href = url;
@@ -61,7 +75,8 @@ export async function downloadImage(image, effects = null) {
     }
     const blob = await response.blob();
     const blobUrl = URL.createObjectURL(blob);
-    triggerDownload(blobUrl, `${slugify(image.title)}.jpg`);
+    const extension = getFileExtension(image, blob);
+    triggerDownload(blobUrl, `${slugify(image.title)}${extension}`);
     URL.revokeObjectURL(blobUrl);
     return { ok: true };
   } catch {

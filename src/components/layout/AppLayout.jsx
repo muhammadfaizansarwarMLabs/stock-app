@@ -22,8 +22,16 @@ export function AppLayout({ children }) {
     <>
       <div className="page-shell">
         <header className="sticky top-4 z-50 mb-8 flex flex-col gap-5 rounded-[2rem] bg-slate-950/70 px-6 py-5 backdrop-blur md:flex-row md:items-center md:justify-between md:px-8 md:py-6">
-          <Link to="/" className="hero-title text-3xl font-bold tracking-tight text-white md:text-4xl">
-            Modern Stock Gallery
+          <Link
+            to="/"
+            className="hero-title inline-flex items-center gap-3 text-3xl font-bold tracking-tight text-white md:text-4xl"
+          >
+            <img
+              src="/images/logo.png"
+              alt="StockHive logo"
+              className="h-10 w-10 rounded-xl object-cover md:h-12 md:w-12"
+            />
+            <span>StockHive</span>
           </Link>
           <nav className="flex flex-wrap items-center gap-3" aria-label="Primary">
             {navItems.map((item) => (

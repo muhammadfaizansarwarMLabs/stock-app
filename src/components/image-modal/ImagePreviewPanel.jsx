@@ -13,6 +13,7 @@ export function ImagePreviewPanel({
   flipH = false,
   flipV = false,
 }) {
+  const tagsText = Array.isArray(image.tags) && image.tags.length ? image.tags.join(" • ") : "Uploaded image";
   // T017 — Compose CSS filter string from all filter effects
   const filterStr = [
     `brightness(${brightness}%)`,
@@ -51,7 +52,7 @@ export function ImagePreviewPanel({
           alt={image.altText}
           onLoad={() => setIsLoaded(true)}
           onError={() => setIsLoaded(true)}
-          className={`h-full w-full object-cover transition-[filter,transform] duration-100 ${
+          className={`h-full w-full object-contain transition-[filter,transform] duration-100 ${
             isLoaded ? "opacity-100" : "opacity-0"
           }`}
           style={{
@@ -63,7 +64,7 @@ export function ImagePreviewPanel({
       </div>
       <div className="flex flex-wrap items-center justify-between gap-3">
         <h2 className="hero-title text-2xl font-bold text-slate-900">{image.title}</h2>
-        <p className="text-sm text-slate-500">{image.tags.join(" • ")}</p>
+        <p className="text-sm text-slate-500">{tagsText}</p>
       </div>
     </div>
   );

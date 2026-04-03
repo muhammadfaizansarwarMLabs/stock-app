@@ -7,7 +7,7 @@ export function SiteFooter() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
           {/* Branding - Left Column */}
           <div className="flex flex-col items-center md:items-start">
-            <h3 className="text-xl font-bold text-slate-900 dark:text-white">Modern Stock Gallery</h3>
+            <h3 className="text-xl font-bold text-slate-900 dark:text-white">StockHive</h3>
             <p className="mt-2 text-sm text-slate-600 dark:text-slate-400 max-w-xs text-center md:text-left">
               Millions of free AI stock photos. Download instantly. Edit or generate variations.
             </p>
@@ -67,7 +67,7 @@ export function SiteFooter() {
         {/* Bottom Divider and Copyright */}
         <div className="mt-8 pt-8 border-t border-slate-200 dark:border-slate-700">
           <p className="text-xs text-slate-500 dark:text-slate-400 text-center">
-            &copy; {new Date().getFullYear()} Modern Stock Gallery. All rights reserved.
+            &copy; {new Date().getFullYear()} StockHive. All rights reserved.
           </p>
         </div>
       </div>

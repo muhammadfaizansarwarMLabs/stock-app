@@ -1,11 +1,12 @@
-import { useMemo, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useMemo, useRef, useState } from "react";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { popularImages, getImagesByTag } from "../../data/images";
 import { filterImagesByTitle } from "../../utils/filter-images";
 import { TitleFilter } from "../../components/filters/TitleFilter";
 import { ImageGrid } from "../../components/image-grid/ImageGrid";
 import { TagFilterRow } from "../../components/landing/TagFilterRow";
 import { useSelection } from "../../state/selection-context";
+import { createUploadedImageSource, isSupportedImageFile } from "../../utils/uploaded-image-source";
 import "./landing.css";
 
 const HERO_COLLAGE_IMAGES = [
@@ -34,11 +35,38 @@ const COLLAGE_CONFIGS = [
 
 const collageImages = [...HERO_COLLAGE_IMAGES, ...HERO_COLLAGE_IMAGES];
 
-export function LandingPage({ favoriteIds, onToggleFavorite }) {
+export function LandingPage({ favoriteIds, onToggleFavorite, onOpenUploadedImage }) {
   const [query, setQuery] = useState("");
+  const [uploadError, setUploadError] = useState("");
   const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const fileInputRef = useRef(null);
   const activeTag = searchParams.get("tag") || null;
   const { selectedIds, selectAll, clearAll } = useSelection();
+
+  const handleUploadClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleUploadChange = (event) => {
+    const file = event.target.files?.[0] ?? null;
+    event.target.value = "";
+
+    if (!file) {
+      return;
+    }
+
+    if (!isSupportedImageFile(file)) {
+      setUploadError("Please select a valid image file.");
+      return;
+    }
+
+    setUploadError("");
+    const uploadedImage = createUploadedImageSource(file);
+    onOpenUploadedImage?.(uploadedImage);
+    navigate("/image/uploaded", { state: { backgroundLocation: location } });
+  };
 
   const handleTagChange = (tag) => {
     if (tag) {
@@ -75,6 +103,28 @@ export function LandingPage({ favoriteIds, onToggleFavorite }) {
             </p>
             <div className="mt-6 max-w-xl">
               <TitleFilter query={query} onQueryChange={setQuery} />
+              <div className="mt-6 space-y-2">
+                <button
+                  type="button"
+                  onClick={handleUploadClick}
+                  className="rounded-full border border-slate-300 bg-white px-5 py-3 text-base font-semibold text-slate-700 transition hover:border-slate-400 hover:bg-slate-50 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
+                >
+                  Upload Your Photo
+                </button>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={handleUploadChange}
+                  aria-label="Upload image from device"
+                />
+                {uploadError ? (
+                  <p className="text-sm font-medium text-red-600" role="alert">
+                    {uploadError}
+                  </p>
+                ) : null}
+              </div>
             </div>
           </div>
 

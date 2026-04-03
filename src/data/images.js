@@ -1,13 +1,13 @@
 export const images = [
   {
-    id: "copper-canyon",
-    title: "Copper Canyon Dawn",
-    thumbnailUrl: "https://picsum.photos/id/1015/600/400",
-    fullImageUrl: "https://picsum.photos/id/1015/1600/1000",
-    downloadUrl: "https://picsum.photos/id/1015/2400/1600",
+    id: "model-outdoor-1",
+    title: "Summer Fashion Outdoor",
+    thumbnailUrl: "https://picsum.photos/id/147/600/400",
+    fullImageUrl: "https://picsum.photos/id/147/1600/1000",
+    downloadUrl: "https://picsum.photos/id/147/2400/1600",
     isPopular: true,
-    tags: ["mountains", "sunrise", "landscape"],
-    altText: "Sun rising over layered mountain canyon"
+    tags: ["female model", "fashion", "outdoor"],
+    altText: "Female model in casual summer fashion outdoor shoot"
   },
   {
     id: "urban-ocean",

@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { downloadImage } from "../../utils/download-image";
 import { ImagePreviewPanel } from "./ImagePreviewPanel";
 import { EffectsPanel } from "./EffectsPanel";
+import { createUploadedImageSource, isSupportedImageFile } from "../../utils/uploaded-image-source";
 
 // T001 — Preview transform constants (all 9 effects)
 const ZOOM_DEFAULT = 100;
@@ -30,8 +31,9 @@ const EFFECT_DEFAULTS = {
   flipV: FLIP_V_DEFAULT,
 };
 
-export function ImageModal({ image }) {
+export function ImageModal({ image, onReplaceUploadedImage, onClearUploadedImage }) {
   const navigate = useNavigate();
+  const changeFileInputRef = useRef(null);
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
 
@@ -82,7 +84,12 @@ export function ImageModal({ image }) {
     setFlipV(FLIP_V_DEFAULT);
   };
 
-  const closeModal = () => navigate(-1);
+  const closeModal = () => {
+    if (image.isUploaded) {
+      onClearUploadedImage?.();
+    }
+    navigate(-1);
+  };
 
   // T009 — Zoom handlers clamped to 50–200%
   const handleZoomIn = () => setZoom((z) => Math.min(z + ZOOM_STEP, ZOOM_MAX));
@@ -95,6 +102,29 @@ export function ImageModal({ image }) {
     const result = await downloadImage(image, effects);
     setBusy(false);
     if (!result.ok) setError(result.message ?? "Download failed.");
+  };
+
+  const handleChangeImageClick = () => {
+    changeFileInputRef.current?.click();
+  };
+
+  const handleChangeImage = (event) => {
+    const file = event.target.files?.[0] ?? null;
+    event.target.value = "";
+
+    if (!file) {
+      return;
+    }
+
+    if (!isSupportedImageFile(file)) {
+      setError("Please select a valid image file.");
+      return;
+    }
+
+    const nextUploadedImage = createUploadedImageSource(file);
+    onReplaceUploadedImage?.(nextUploadedImage);
+    handleResetAll();
+    setError("");
   };
 
   return (
@@ -172,6 +202,26 @@ export function ImageModal({ image }) {
           >
             {busy ? "Preparing…" : "Download"}
           </button>
+
+          {image.isUploaded ? (
+            <>
+              <button
+                type="button"
+                onClick={handleChangeImageClick}
+                className="rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-slate-400 hover:bg-slate-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-orange-500"
+              >
+                Change Image
+              </button>
+              <input
+                ref={changeFileInputRef}
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={handleChangeImage}
+                aria-label="Change uploaded image"
+              />
+            </>
+          ) : null}
 
           {/* T023 — Error display */}
           {error ? (

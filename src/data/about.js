@@ -3,7 +3,7 @@ export const aboutContent = {
   sections: [
     {
       heading: "Why this gallery exists",
-      body: "Modern Stock Gallery is a static-first image browser that focuses on speed, visual clarity, and distraction-free discovery."
+      body: "StockHive is a static-first image browser that focuses on speed, visual clarity, and distraction-free discovery."
     },
     {
       heading: "What makes it different",
