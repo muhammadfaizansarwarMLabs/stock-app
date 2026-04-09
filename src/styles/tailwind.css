@@ -51,6 +51,36 @@ body {
   font-family: "Space Grotesk", sans-serif;
 }
 
+.header-auth-actions {
+  @apply inline-flex items-center gap-2;
+}
+
+.header-auth-button {
+  @apply rounded-full px-4 py-2 text-sm font-semibold transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-500;
+}
+
+.header-auth-button-primary {
+  @apply bg-white text-slate-900 hover:bg-slate-100;
+}
+
+.header-auth-button-secondary {
+  @apply border border-white/40 text-white hover:bg-white/15;
+}
+
+.header-user-menu {
+  @apply inline-flex items-center;
+}
+
+@media (max-width: 768px) {
+  .header-auth-actions {
+    @apply w-full flex-wrap;
+  }
+
+  .header-auth-button {
+    @apply flex-1 min-w-[120px] justify-center;
+  }
+}
+
 /* On hover-capable devices, reveal card actions only on hover; keep visible on touch devices. */
 @media (any-hover: hover) {
   .card-actions {

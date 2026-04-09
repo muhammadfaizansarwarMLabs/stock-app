@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
 import { DownloadButton } from "../bulk-download/DownloadButton";
 import { ThemeToggle } from "../theme/ThemeToggle";
+import { HeaderAuthControls } from "../auth/HeaderAuthControls";
 import { SiteFooter } from "./SiteFooter";
 import { ErrorBanner } from "./ErrorBanner";
 
@@ -83,6 +84,7 @@ export function AppLayout({ children }) {
               </NavLink>
             ))}
             <DownloadButton />
+            <HeaderAuthControls />
             <ThemeToggle />
           </nav>
         </header>
