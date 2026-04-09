@@ -12,6 +12,10 @@ export const aboutContent = {
     {
       heading: "How content is sourced",
       body: "This build uses embedded mock data for images and page content. No live feeds or external databases are required."
+    },
+    {
+      heading: "How content is sourced",
+      body: "This build uses embedded mock data for images and page content. No live feeds or external databases are required."
     }
   ]
 };
